@@ -399,8 +399,14 @@ class TestProblems implements InternalProblems {
 
     void assertProblemEmittedOnce(Object expectedProblem) {
         assert summarizer.emitted.size() == 1
-        def problem = summarizer.emitted[0]
-        assert expectedProblem instanceof Closure ? expectedProblem.call(problem) : expectedProblem instanceof Wildcard ? true : expectedProblem == problem
+        def actualProblem = summarizer.emitted[0]
+        if (expectedProblem instanceof Closure) {
+            assert expectedProblem.call(actualProblem)
+        } else if (expectedProblem instanceof Problem) {
+            assert expectedProblem == actualProblem
+        } else {
+            assert expectedProblem instanceof Wildcard
+        }
     }
 
     void recordEmittedProblems() {
