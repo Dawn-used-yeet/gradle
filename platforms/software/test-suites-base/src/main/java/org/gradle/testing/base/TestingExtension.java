@@ -32,4 +32,8 @@ public interface TestingExtension {
      * The type of test suites available depend on which other plugins are applied.
      */
     ExtensiblePolymorphicDomainObjectContainer<TestSuite> getSuites();
+
+    // TODO: This should probably be a report on the reporting container.
+    TestResultsRegistry getResults();
+
 }

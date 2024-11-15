@@ -19,6 +19,10 @@ package org.gradle.testing.base.plugins;
 import org.gradle.api.Incubating;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.file.Directory;
+import org.gradle.api.plugins.ReportingBasePlugin;
+import org.gradle.api.provider.Provider;
+import org.gradle.api.reporting.ReportingExtension;
 import org.gradle.testing.base.TestingExtension;
 import org.gradle.testing.base.internal.DefaultTestingExtension;
 
@@ -29,8 +33,23 @@ import org.gradle.testing.base.internal.DefaultTestingExtension;
  */
 @Incubating
 public abstract class TestSuiteBasePlugin implements Plugin<Project> {
+
     @Override
     public void apply(Project project) {
-        project.getExtensions().create(TestingExtension.class, "testing", DefaultTestingExtension.class);
+        TestingExtension testing = project.getExtensions().create(TestingExtension.class, "testing", DefaultTestingExtension.class);
+        project.getPlugins().apply(ReportingBasePlugin.class);
+        Provider<Directory> testReportsDir = project.getExtensions().getByType(ReportingExtension.class).getBaseDirectory().dir(TestingBasePlugin.TESTS_DIR_NAME);
+        testing.getResults().getHtmlReport().set(testReportsDir.map(it -> it.dir("aggregated-results")));
+
+        // All test suite targets get aggregated automatically
+        // TODO: Do we _always_ want to aggregate? How fast/slow is aggregation?
+        testing.getSuites().configureEach(suite -> {
+            suite.getTargets().configureEach(target -> {
+                target.getTestTask().configure(task -> {
+                    task.finalizedBy(testing.getResults(), results -> results.getBinaryResults().from(target.getBinaryResultsDirectory()));
+                });
+            });
+        });
     }
+
 }

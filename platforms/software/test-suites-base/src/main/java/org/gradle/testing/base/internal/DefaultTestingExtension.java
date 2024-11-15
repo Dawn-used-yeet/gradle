@@ -18,17 +18,21 @@ package org.gradle.testing.base.internal;
 
 import org.gradle.api.ExtensiblePolymorphicDomainObjectContainer;
 import org.gradle.api.model.ObjectFactory;
+import org.gradle.testing.base.TestResultsRegistry;
 import org.gradle.testing.base.TestSuite;
 import org.gradle.testing.base.TestingExtension;
 
 import javax.inject.Inject;
 
 public abstract class DefaultTestingExtension implements TestingExtension {
+
     private final ExtensiblePolymorphicDomainObjectContainer<TestSuite> suites;
+    private final TestResultsRegistry results;
 
     @Inject
     public DefaultTestingExtension() {
         this.suites = getObjectFactory().polymorphicDomainObjectContainer(TestSuite.class);
+        this.results = getObjectFactory().newInstance(DefaultTestResultsRegistry.class);
     }
 
     @Inject
@@ -37,5 +41,10 @@ public abstract class DefaultTestingExtension implements TestingExtension {
     @Override
     public ExtensiblePolymorphicDomainObjectContainer<TestSuite> getSuites() {
         return suites;
+    }
+
+    @Override
+    public TestResultsRegistry getResults() {
+        return results;
     }
 }
