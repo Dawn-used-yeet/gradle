@@ -100,6 +100,10 @@ fun Project.extractCiData() {
             }
             if (isEc2Agent()) {
                 tag("EC2")
+                safeAddSystemPropertyToBuildScan(this, "EC2 AMI ID", "ec2.ami-id")
+                safeAddSystemPropertyToBuildScan(this, "EC2 instance type", "ec2.instance-type")
+                safeAddSystemPropertyToBuildScan(this, "EC2 instance ID", "ec2.instance-id")
+                safeAddSystemPropertyToBuildScan(this, "EC2 cloud profile ID", "cloud.profile_id")
             }
             if (isGhActions) {
                 tag("GH_ACTION")
@@ -133,6 +137,13 @@ fun Project.extractCiData() {
                 }
             }
         }
+    }
+}
+
+fun Project.safeAddSystemPropertyToBuildScan(buildScan: BuildScanConfiguration, customValueName: String, propertyName: String) {
+    val propertyValue = project.findProperty(propertyName)
+    if (propertyValue != null) {
+        buildScan.value(customValueName, propertyValue.toString())
     }
 }
 
