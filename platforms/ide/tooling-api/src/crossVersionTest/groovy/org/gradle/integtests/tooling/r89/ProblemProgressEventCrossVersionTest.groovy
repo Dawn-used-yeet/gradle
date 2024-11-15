@@ -306,7 +306,7 @@ class ProblemProgressEventCrossVersionTest extends ToolingApiSpecification {
 
                 // Ignore problems caused by the minimum JVM version deprecation.
                 // These are emitted intermittently depending on the version of Java used to run the test.
-                if (singleProblem.definition.id.name == "executing-gradle-on-jvm-versions-and-lower") {
+                if (singleProblem.problem.definition.id.name == "executing-gradle-on-jvm-versions-and-lower") {
                     return
                 }
 

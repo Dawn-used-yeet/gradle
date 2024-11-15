@@ -21,8 +21,6 @@ import org.gradle.integtests.tooling.fixture.ToolingApiSpecification
 import org.gradle.integtests.tooling.fixture.ToolingApiVersion
 import org.gradle.integtests.tooling.r85.CustomModel
 import org.gradle.tooling.events.OperationType
-import org.gradle.tooling.events.ProgressEvent
-import org.gradle.tooling.events.ProgressListener
 import org.gradle.tooling.events.problems.ProblemSummariesEvent
 import org.gradle.tooling.events.problems.SingleProblemEvent
 
